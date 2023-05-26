@@ -1,0 +1,32 @@
+name: docker image
+author: EleSangwon
+description: 'Use build-image in github action .'
+inputs:
+  REGISTRY:
+    description: 'Set aws registry'
+    required: false
+    default: ''
+  REPOSITORY:
+    description: 'Set aws repository'
+    required: true
+    default: 'test-repository'
+  DOCKERFILE_PATH:
+    description: 'Set dockerfile path'
+    required: false
+    default: 'Dockerfile'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    - name: docker test
+      run: |
+        docker build -f ${{ inputs.DOCKERFILE_PATH }} . \
+        --tag ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:latest \
+        --tag ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ github.sha }}
+        docker push ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:latest
+        docker push ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ github.sha }}
+
+        

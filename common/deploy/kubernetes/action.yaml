@@ -1,0 +1,53 @@
+name: deploy kubernetes
+author: EleSangwon
+description: 'Use deploy job in github action .'
+inputs:
+  KUBECTL_VERSION:
+    description: 'Set kubectl version'
+    required: false
+    default: 'v1.24.0'
+  HELM_VERSION:
+    description: 'Set helm version'
+    required: false
+    default: 'v3.7.2'
+  EKS_CLUSTER:
+    description: 'Set eks cluster'
+    required: true
+    default: 'eks-project-dev'
+  RELEASE_NAME:
+    description: 'Set release name'
+    required: true
+    default: 'application'    
+  HELM_CHART_PATH:
+    description: 'Set helm chart path'
+    required: true
+    default: 'helm-chart'
+  NAMESPACE:
+    description: 'Set eks namespace'
+    required: true
+    default: 'application-dev' 
+  VALUES_PATH:
+    description: 'Set eks namespace'
+    required: true
+    default: 'helm-chart/values/dev/value.yaml'    
+
+runs:
+  using: "composite"
+  steps:
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: ${{ inputs.KUBECTL_VERSION }}
+    - uses: azure/setup-helm@v3
+      with:
+        version: ${{ inputs.HELM_VERSION }}
+    - name: get k8s kube-config
+      shell: bash
+      run: |
+        aws eks update-kubeconfig --name ${{ inputs.EKS_CLUSTER }}
+    - name: deploy Helm
+      shell: bash
+      run: |
+        helm upgrade --install ${{ inputs.RELEASE_NAME }} ${{ inputs.HELM_CHART_PATH }} --namespace ${{ inputs.NAMESPACE }}  --wait --atomic \
+        --timeout 15m \
+        --values ${{ inputs.VALUES_PATH }} \
+        --set image.tag=${{ github.sha }}

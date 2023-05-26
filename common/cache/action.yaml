@@ -1,0 +1,38 @@
+name: cache
+author: EleSangwon
+description: 'Use test job in github action .'
+inputs:
+  node_version:
+    description: 'Set node version'
+    required: true
+    default: '18'
+  work_directory:
+    description: 'Set work directory'
+    required: true
+    default: 'my-app'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node_version }}
+    - name: Cache Node.js modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Install dependencies
+      shell: bash
+      run: |
+        cd ${{ inputs.work_directory }}
+        npm ci
+    - name: Test
+      shell: bash
+      run: |
+        cd work_directory
+        npm test
+        
+        
