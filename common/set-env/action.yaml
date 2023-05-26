@@ -1,0 +1,50 @@
+name: set-env
+author: EleSangwon
+description: 'Use set-environment job in github action .'
+inputs:
+  ref_type:
+    description: 'branch or tag'
+    required: true
+    default: 'branch'
+  ref_name:
+    description: 'develop or production'
+    required: true
+    default: 'develop'
+outputs:
+  set-env:
+    description: 'Get env'
+    value: ${{ steps.set-values.outputs.set-env }}
+  set-tag:
+    description: 'Get tag'
+    value: ${{ steps.set-values.outputs.set-tag }}
+  
+
+runs:
+  using: "composite"
+  steps:
+    - name: set env
+      id: set-values
+      shell: bash
+      run: |
+        if [[ ${{ inputs.ref_type }} == "tag" ]]; then
+            echo "set-env=qa" >> "$GITHUB_OUTPUT"
+            echo "set-tag=${{ inputs.ref_name }}" >> "$GITHUB_OUTPUT"
+            exit 0
+        fi
+
+        if [[ ${{ inputs.ref_type }} == "branch" ]]; then
+          if [[ ${{ inputs.ref_name }} == "develop" ]]; then
+            echo "set-env=develop" >> "$GITHUB_OUTPUT"
+            exit 0
+          elif [[ ${{ inputs.ref_name }} == "production" ]]; then
+            echo "set-env=staging" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+        fi
+    - name: check output
+      shell: bash
+      run: |
+        echo ${{ steps.set-values.outputs.set-env }}
+        echo ${{ steps.set-values.outputs.set-tag }}
+        
+        
