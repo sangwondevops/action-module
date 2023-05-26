@@ -2,11 +2,11 @@ name: set-env
 author: EleSangwon
 description: 'Use set-environment job in github action .'
 inputs:
-  ref_type:
+  REF_TYPE:
     description: 'branch or tag'
     required: true
     default: 'branch'
-  ref_name:
+  REF_NAME:
     description: 'develop or production'
     required: true
     default: 'develop'
@@ -26,17 +26,17 @@ runs:
       id: set-values
       shell: bash
       run: |
-        if [[ ${{ inputs.ref_type }} == "tag" ]]; then
+        if [[ ${{ inputs.REF_TYPE }} == "tag" ]]; then
             echo "set-env=qa" >> "$GITHUB_OUTPUT"
-            echo "set-tag=${{ inputs.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "set-tag=${{ inputs.REF_NAME }}" >> "$GITHUB_OUTPUT"
             exit 0
         fi
 
-        if [[ ${{ inputs.ref_type }} == "branch" ]]; then
-          if [[ ${{ inputs.ref_name }} == "develop" ]]; then
+        if [[ ${{ inputs.REF_TYPE }} == "branch" ]]; then
+          if [[ ${{ inputs.REF_NAME }} == "develop" ]]; then
             echo "set-env=develop" >> "$GITHUB_OUTPUT"
             exit 0
-          elif [[ ${{ inputs.ref_name }} == "production" ]]; then
+          elif [[ ${{ inputs.REF_NAME }} == "production" ]]; then
             echo "set-env=staging" >> "$GITHUB_OUTPUT"
             exit 0
           fi

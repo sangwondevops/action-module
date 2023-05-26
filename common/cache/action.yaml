@@ -2,11 +2,11 @@ name: cache
 author: EleSangwon
 description: 'Use test job in github action .'
 inputs:
-  node_version:
+  NODE_VERSION:
     description: 'Set node version'
     required: true
     default: '18'
-  work_directory:
+  WORKING_DIRECTORY:
     description: 'Set work directory'
     required: true
     default: 'my-app'
@@ -16,7 +16,7 @@ runs:
   steps:
     - uses: actions/setup-node@v3
       with:
-        node-version: ${{ inputs.node_version }}
+        node-version: ${{ inputs.NODE_VERSION }}
     - name: Cache Node.js modules
       uses: actions/cache@v3
       with:
@@ -27,12 +27,12 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        cd ${{ inputs.work_directory }}
+        cd ${{ inputs.WORKING_DIRECTORY }}
         npm ci
     - name: Test
       shell: bash
       run: |
-        cd work_directory
+        cd ${{ inputs.WORKING_DIRECTORY }}
         npm test
         
         
