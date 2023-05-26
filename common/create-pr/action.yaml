@@ -2,7 +2,7 @@ name: create-pr
 author: EleSangwon
 description: 'Use create-pr job in github action .'
 inputs:
-  GITHUB_PAT:
+  PERSONAL_ACCESS_TOKEN:
     description: 'branch or tag'
     required: true
     default: ''
@@ -20,7 +20,7 @@ runs:
     - name: gh auth login
       shell: bash
       run: |
-        echo ${{ inputs.GITHUB_PAT }} | gh auth login --with-token
+        echo ${{ inputs.PERSONAL_ACCESS_TOKEN }} | gh auth login --with-token
     - name: tag filter
       id: filter
       shell: bash
