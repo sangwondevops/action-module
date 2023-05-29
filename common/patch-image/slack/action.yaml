@@ -1,0 +1,59 @@
+name: slack patch-image
+author: EleSangwon
+description: 'Use patch-image job in github action .'
+inputs:
+  SLACK_WEBHOOK:
+    description: 'set SLACK_WEBHOOK'
+    required: true
+    default: ''
+  APPROVE_PR_URL:
+    description: 'set APPROVE_PR_URL'
+    required: true
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: Send PR URL
+      id: slack
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        payload: |
+          {
+            "attachments": [
+                {
+                    "fallback": "Approve for prod deploy",
+                    "color": "#3AA3E3",
+                    "text": "Approve for prod deploy",
+                    "fields": [
+                        {
+                            "title": "Branch",
+                            "value": "${{ github.ref_name }}",
+                            "short": true
+                        },
+                        {
+                            "title": "Repository",
+                            "value": "${{ github.repository }}",
+                            "short": true
+                        },
+                        {
+                            "title": "Actor",
+                            "value": "${{ github.actor }}",
+                            "short": true
+                        }
+                    ],
+                    "actions": [
+                        {
+                            "type": "button",
+                            "text": "Approve for prod deploy",
+                            "url" : "${{ inputs.APPROVE_PR_URL }}"
+                        }
+                    ]
+                }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ inputs.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        
+        
