@@ -22,6 +22,7 @@ runs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
     - name: docker build & push
+      shell: bash
       run: |
         docker build -f ${{ inputs.DOCKERFILE_PATH }} . \
         --tag ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:latest \
