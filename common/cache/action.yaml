@@ -29,10 +29,10 @@ runs:
       run: |
         cd ${{ inputs.WORKING_DIRECTORY }}
         npm ci
-    - name: Test
+    - name: npm build
       shell: bash
       run: |
         cd ${{ inputs.WORKING_DIRECTORY }}
-        npm test
+        npm run build
         
         
