@@ -47,7 +47,7 @@ runs:
     - name: deploy Helm
       shell: bash
       run: |
-        helm upgrade --install ${{ inputs.RELEASE_NAME }} ${{ inputs.HELM_CHART_PATH }} --namespace ${{ inputs.NAMESPACE }}  --wait --atomic \
+        helm upgrade --install ${{ inputs.RELEASE_NAME }} ${{ inputs.HELM_CHART_PATH }} --create-namespace --namespace ${{ inputs.NAMESPACE }}  --wait --atomic \
         --timeout 15m \
         --values ${{ inputs.VALUES_PATH }} \
         --set image.tag=${{ github.sha }}
