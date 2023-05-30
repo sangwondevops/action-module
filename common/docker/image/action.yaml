@@ -2,11 +2,11 @@ name: docker image
 author: EleSangwon
 description: 'Use build-image in github action .'
 inputs:
-  REGISTRY:
+  ECR_REPOSITORY:
     description: 'Set aws registry'
     required: false
     default: ''
-  REPOSITORY:
+  ECR_REGISTRY:
     description: 'Set aws repository'
     required: true
     default: 'test-repository'
@@ -25,9 +25,9 @@ runs:
       shell: bash
       run: |
         docker build -f ${{ inputs.DOCKERFILE_PATH }} . \
-        --tag ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:latest \
-        --tag ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ github.sha }}
-        docker push ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:latest
-        docker push ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ github.sha }}
+        --tag ${{ inputs.ECR_REGISTRY }}/${{ inputs.ECR_REPOSITORY }}:latest \
+        --tag ${{ inputs.ECR_REGISTRY }}/${{ inputs.ECR_REPOSITORY }}:${{ github.sha }}
+        docker push ${{ inputs.ECR_REGISTRY }}/${{ inputs.ECR_REPOSITORY }}:latest
+        docker push ${{ inputs.ECR_REGISTRY }}/${{ inputs.ECR_REPOSITORY }}:${{ github.sha }}
 
         
