@@ -28,7 +28,9 @@ runs:
       run: |
         if [[ ${{ inputs.REF_TYPE }} == "tag" ]]; then
             echo "set-env=qa" >> "$GITHUB_OUTPUT"
-            echo "set-tag=${{ inputs.REF_NAME }}" >> "$GITHUB_OUTPUT"
+            tag=${GITHUB_REF#refs/tags/}
+            echo "tag: $tag"
+            echo "set-tag=$tag" >> "$GITHUB_OUTPUT"
             exit 0
         fi
 

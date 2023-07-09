@@ -1,0 +1,21 @@
+name: create-release
+author: EleSangwon
+description: 'Use create-release job in github action .'
+inputs:
+  PERSONAL_ACCESS_TOKEN:
+    description: 'set personal access token'
+    required: true
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: gh auth login
+      shell: bash
+      run: |
+        echo ${{ inputs.PERSONAL_ACCESS_TOKEN }} | gh auth login --with-token
+    - name: create release using gh cli
+      shell: bash
+      run: |
+        gh release create ${GITHUB_HEAD_REF#*/} --target ${GITHUB_HEAD_REF} --notes "${GITHUB_HEAD_REF#*/} Release" --generate-notes
+        
